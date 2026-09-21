@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "layout_name": "stage1_three_cameras_zed_flir_zed",
+  "common_height_m": 1.6,
+  "placement_bounds_m": {
+    "x": [
+      -35.5,
+      35.5
+    ],
+    "y": [
+      -18,
+      57
+    ]
+  },
+  "observed_scene_geometry": {
+    "source": "running composed hangar/scene.usda; parent stage_inspection.json",
+    "floor_world_x_m": [
+      -38.5,
+      38.5
+    ],
+    "floor_world_y_m": [
+      -20.9849,
+      60.0151
+    ],
+    "aircraft_world_x_m": [
+      -17.86,
+      17.86
+    ],
+    "aircraft_world_y_m": [
+      0,
+      39.02
+    ]
+  },
+  "conservative_keepout_boxes_xy_m": [
+    {
+      "name": "aircraft_world_axis_aligned_bounds",
+      "x": [
+        -17.86,
+        17.86
+      ],
+      "y": [
+        0,
+        39.02
+      ]
+    }
+  ],
+  "render_camera_ids": [
+    "cam_01",
+    "cam_02",
+    "cam_03"
+  ],
+  "warnings": [
+    "Stage1 only: legacy camera IDs, robot counts and capture profiles do not apply.",
+    "Camera output resolution is native; viewport previews are separate."
+  ],
+  "stations": [
+    {
+      "id": "cam_01",
+      "model": "zed_x_one_4k_wide",
+      "position_xy_m": [
+        20.0,
+        0.0
+      ],
+      "pose": {
+        "type": "look_at",
+        "target_m": [
+          0.0,
+          19.5,
+          3.063904163785566
+        ],
+        "up_world": [
+          0,
+          0,
+          1
+        ]
+      },
+      "resolution_mode": "native",
+      "scheduled_fps": 15
+    },
+    {
+      "id": "cam_02",
+      "model": "flir_bfs_u3_244s8c_kowa_lm12xc",
+      "position_xy_m": [
+        30.0,
+        20.0
+      ],
+      "pose": {
+        "type": "look_at",
+        "target_m": [
+          0.0,
+          19.5,
+          3.1724517290760668
+        ],
+        "up_world": [
+          0,
+          0,
+          1
+        ]
+      },
+      "resolution_mode": "native",
+      "scheduled_fps": 15
+    },
+    {
+      "id": "cam_03",
+      "model": "zed_x_one_4k_wide",
+      "position_xy_m": [
+        20.0,
+        40.0
+      ],
+      "pose": {
+        "type": "look_at",
+        "target_m": [
+          0.0,
+          19.5,
+          3.1009591646423678
+        ],
+        "up_world": [
+          0,
+          0,
+          1
+        ]
+      },
+      "resolution_mode": "native",
+      "scheduled_fps": 15
+    }
+  ],
+  "placement_constraints": {
+    "active_side": "positive_x",
+    "common_height_m": 1.6,
+    "common_upward_tilt_deg": 3.0,
+    "yaw_target_xy_m": [
+      0.0,
+      19.5
+    ],
+    "rounded_positions_authorized": true,
+    "bilateral_symmetry_required_for_active_subset": false,
+    "previous_full_layout_preserved_in_backup": false,
+    "original_project_unchanged": true
+  }
+}

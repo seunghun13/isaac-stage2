@@ -1,0 +1,197 @@
+--- v5/integration_common.py
++++ v6/integration_common.py
+@@ -58,6 +58,6 @@
+     assert x['schema']=='stage2_integration_v6' and x['completion_cycles']==2
+     assert (x['ticks'],x['route_offset_s']) in [(60,0),(300,4),(1800,0)]
+     assert x['camera_stride']==4 and x['physics_hz']==60 and x['resolution']=='native'
+-    assert x['qr_boards_enabled'] is True and x['color_plane_enabled'] is False
++    assert x['qr_boards_enabled'] is False and x['color_plane_enabled'] is False
+     assert 180<=x['wall_timeout_s']<=5400 and 0<=x['epoch']<2**32
+     safe(x['case']);return x
+--- v5/integration_scene.py
++++ v6/integration_scene.py
+@@ -28,7 +28,8 @@
+ class Scene:
+     def __init__(self,stage,epoch):
+         from pxr import Gf,Usd,UsdGeom,UsdPhysics
+-        from robot_timeboard import RobotTimeBoard
++        from noqr_guard import assert_qr_free_stage
++        assert_qr_free_stage(stage)
+         self.stage=stage;self.ops={};self.centers={};self.boards={}
+         stage.SetEditTarget(stage.GetSessionLayer())
+         for layer in stage.GetUsedLayers():
+@@ -53,23 +54,11 @@
+             tr=root.AddTranslateOp(UsdGeom.XformOp.PrecisionDouble,'stage2motion');yaw=root.AddRotateZOp(UsdGeom.XformOp.PrecisionDouble,'stage2motion')
+             self.ops[robot]=(tr,yaw);self.centers[robot]=stage.GetPrimAtPath('/World/'+robot+'_1/base_link/TrackingCenter')
+         self.move(0.)
+-        # Aim the mounting plane once at cam_02 from route start; its transform
+-        # remains fixed in the robot frame during translation and rotation.
+-        camera=UsdGeom.XformCache().GetLocalToWorldTransform(stage.GetPrimAtPath('/MRO_Cameras/cam_02')).ExtractTranslation()
+-        for robot,board_id in [('drone',101),('rover',201)]:
+-            tcworld=UsdGeom.XformCache().GetLocalToWorldTransform(self.centers[robot])
+-            offset=Gf.Vec3d(0,.85,.60);location=tcworld.Transform(offset)
+-            z=(location-camera).GetNormalized();x=Gf.Cross(z,Gf.Vec3d(0,0,1)).GetNormalized();y=Gf.Cross(z,x).GetNormalized()
+-            world=Gf.Matrix4d(x[0],x[1],x[2],0,y[0],y[1],y[2],0,z[0],z[1],z[2],0,*location,1)
+-            mount=world*tcworld.GetInverse()
+-            config={'robot_id':robot+'_1','board_id':board_id,'tracking_center_prim_path':str(self.centers[robot].GetPath()),
+-                'cell_size_m':.04,'T_tracking_center_board_row':rows(mount),'target_camera':'cam_02','search_roi_xyxy':[0,0,5320,4600]}
+-            self.boards[robot]=RobotTimeBoard(stage,config,epoch)
+         active=[p.GetName() for p in stage.GetPrimAtPath('/World').GetChildren() if p.IsActive() and p.GetName().startswith(('drone_','rover_'))]
+         assert sorted(active)==['drone_1','rover_1'],active
+         assert not any(p.HasAPI(UsdPhysics.RigidBodyAPI) and UsdPhysics.RigidBodyAPI(p).GetRigidBodyEnabledAttr().Get() for p in stage.Traverse())
+         self.metadata={'rover_center_z_m':self.rover_z,'rover_height_source':'original fixed TrackingCenter USD readback at time 0 before Stage2 movement',
+-            'active_robots':active,'propulsion':False,'trajectory_velocity_is_physical':False,'rigid_bodies_enabled':False,'qr_lidar_occlusion_possible':True,
++            'active_robots':active,'propulsion':False,'trajectory_velocity_is_physical':False,'rigid_bodies_enabled':False,'qr_lidar_occlusion_possible':False,'qr_boards_enabled':False,
+             'boards':{k:b.metadata for k,b in self.boards.items()},'rover_center_definition':definition}
+     def move(self,t):
+         from pxr import Gf,UsdGeom
+--- v5/integration_runtime.py
++++ v6/integration_runtime.py
+@@ -7,6 +7,7 @@
+ from native_snapshot import read_snapshot
+ from scene_time_mapping import read_profiles,packet_mapping
+ from integration_scene import Scene,pose,rows,rover_reader
++from noqr_guard import assert_qr_free_stage
+ 
+ async def execute(case,req):
+     import carb,omni.kit.app,omni.usd,omni.timeline,omni.replicator.core as rep
+@@ -42,8 +43,7 @@
+         for robot,r in readers.items():
+             for parent,child,key in [('tracking_center','base_link','T_center_from_base_row'),('base_link','lidar','T_base_from_sensor_row')]:
+                 m=Gf.Matrix4d(*[x for row in r.metadata[key] for x in row]);transforms.append(dict(parent=robot+'_1/'+parent,child=robot+'_1/'+child,**pose(m)))
+-            m=Gf.Matrix4d(*[x for row in scene.boards[robot].metadata['T_tracking_center_board_row'] for x in row]);transforms.append(dict(parent=robot+'_1/tracking_center',child=robot+'_1/qr',**pose(m)))
+-        assert len(transforms)==9
++        assert len(transforms)==7
+         physics=UsdPhysics.Scene.Define(stage,'/Stage2Clock');physics.CreateGravityMagnitudeAttr(0.);api=PhysxSchema.PhysxSceneAPI.Apply(physics.GetPrim());api.CreateTimeStepsPerSecondAttr(60);api.CreateEnableGPUDynamicsAttr(False);api.CreateBroadphaseTypeAttr('MBP')
+         SM.set_default_physics_scene('/Stage2Clock');SM.set_physics_sim_device('cpu');await omni.kit.app.get_app().next_update_async();SM.initialize_physics();timeline.pause()
+         await rep.orchestrator.step_async(delta_time=0.,rt_subframes=1,pause_timeline=True)
+@@ -95,17 +95,16 @@
+         origin=clock();origin['stamp_ns']=round(origin['global_s']*1e9)
+         source_hashes=json.loads((C/'SOURCE_MANIFEST.json').read_text())
+         for rel,sha in source_hashes.items():assert hashlib.sha256((M/rel).read_bytes()).hexdigest()==sha,rel
+-        report.update(runtime_profiles=runtime_profiles,scene_time_mapping_contract=calibration,origin=origin,cameras=cams,static_transforms=transforms,scene=scene.metadata,lidars={k:r.metadata for k,r in readers.items()},source_hashes=source_hashes,
++        report.update(qr_absence_initial=assert_qr_free_stage(stage),qr_verification={'status':'not_performed_qr_removed','image_content_time_verified':None},validation_provenance=json.loads((C/'VALIDATION_PROVENANCE.json').read_text()),runtime_profiles=runtime_profiles,scene_time_mapping_contract=calibration,origin=origin,cameras=cams,static_transforms=transforms,scene=scene.metadata,lidars={k:r.metadata for k,r in readers.items()},source_hashes=source_hashes,
+           trajectories={'drone':{'speed_m_s':1,'points':[[5,0,.1665],[5,0,5],[5,10,5],[5,0,5],[5,0,.1665]],'yaw_deg':180},'rover':{'speed_m_s':1,'points':[[2,0,scene.rover_z],[2,6,scene.rover_z],[8,6,scene.rover_z],[8,0,scene.rover_z],[2,0,scene.rover_z]],'turn_duration_s':1,'turn_angle_deg':-90}},
+           packet_selection_rule='last structurally valid nonempty frozen callback snapshot per sensor within TWO fixed completed cycles; rejected raw diagnostics retained; all valid nonempty snapshots published, no content input',completion_cycles=2,
+-          time_contract={'header_image_gt_clock':'observed native global seconds rounded to ns','header_lidar':'unchanged native packet timestamp; not global acquisition time','qr':'native epoch and observed physics step','bag_record_time':'DDS callback wall receipt','route_offset_s':spec['route_offset_s'],'propulsion':False,'lidar_moving_content_time_verified':False,'scene_step_mapping_schema':'stage2_scene_step_mapping_v1','scene_step_resolution_hz':60,'exact_global_beam_time_verified':False},state_count=0,image_count=0,lidar_count=0,raw_event_count=0)
++          time_contract={'header_image_gt_clock':'observed native global seconds rounded to ns','header_lidar':'unchanged native packet timestamp; not global acquisition time','qr':'absent; no direct content time decode in this capture','bag_record_time':'DDS callback wall receipt','route_offset_s':spec['route_offset_s'],'propulsion':False,'lidar_moving_content_time_verified':False,'scene_step_mapping_schema':'stage2_scene_step_mapping_v1','scene_step_resolution_hz':60,'exact_global_beam_time_verified':False},state_count=0,image_count=0,lidar_count=0,raw_event_count=0)
+         stage.GetSessionLayer().Export(str(case/'recording_session.usda'));report['recording_session_sha256']=hashlib.sha256((case/'recording_session.usda').read_bytes()).hexdigest()
+         emitter=Emitter(json.loads((case/'publisher_ready.json').read_text())['port']);emitter.offer(dict(report,type='config'));save(case/'configuration.json',plain(report))
+         for i in range(spec['ticks']+1):
+             if i:SM.step(render=False)
+             now=clock();assert now['step']==origin['step']+i and now['step']<65535
+             route_s=spec['route_offset_s']+now['global_s']-origin['global_s'];robots=scene.move(route_s)
+-            for board in scene.boards.values():board.update(now['step'])
+             current_state={'index':i,'stamp_ns':round(now['global_s']*1e9),'clock':now,'route_s':route_s,'epoch':spec['epoch']};events.clear()
+             completion_evidence=[];first_selected={}
+             for cycle in range(1,3):
+@@ -135,7 +134,7 @@
+             current_state=None
+             if i%20==0:save(case/'progress.json',{'phase':'recording','index':i,'ticks':spec['ticks'],'route_s':route_s,'images':report['image_count'],'raw_events':report['raw_event_count']})
+         emitter.offer({'type':'end','state_count':report['state_count'],'image_count':report['image_count'],'lidar_count':report['lidar_count']});emitter.finish()
+-        report.update(status='complete',final_clock=clock(),queue_peak_bytes=emitter.peak,raw_bytes=rawbytes,wall_s=time.monotonic()-started)
++        report.update(qr_absence_final=assert_qr_free_stage(stage),status='complete',final_clock=clock(),queue_peak_bytes=emitter.peak,raw_bytes=rawbytes,wall_s=time.monotonic()-started)
+     except BaseException:
+         report.update(status='failed',traceback=traceback.format_exc());raise
+     finally:
+--- v5/audit_integration.py
++++ v6/audit_integration.py
+@@ -6,7 +6,6 @@
+ from rosbags.typesys import Stores,get_typestore
+ M=Path('/mnt/DATA/workspace/ws_minho/mro_1');sys.path[:0]=[str(M/'stage2/integration_20260920_v6'),str(M/'stage1/collection_20260918_v1'),str(M/'scripts')]
+ from integration_common import topics
+-from board_vision import detect_board,DEFAULT_VISION_LAYOUT
+ from native_snapshot import parse_gmo_packet
+ from record_runtime import pointcloud
+ import cv2
+@@ -51,7 +50,7 @@
+ if spec['ticks']==1800:assert turn_states==240
+ dbs=list(bag.glob('*.db3'));assert len(dbs)==1;db=dbs[0];before=fingerprint(db);yamlbefore=fingerprint(bag/'metadata.yaml')
+ keys={v[0]:k for k,v in topics().items()};counts=collections.Counter();points=collections.Counter();outside=collections.Counter();metadata_errors=[];mapping_rows=[];completions=[];clockstamps=[];gtchecks=0;imagechecks=0;cloudchecks=0;info_checks=0;wire_exact=0;padding=0;session=None
+-qr={cid:{str(bid):{'images':0,'valid':0,'match':0,'wrong_time':0,'wrong_identity':0,'unreadable':0,'valid_steps':[]} for bid in (101,201)} for cid in ('cam_01','cam_02','cam_03')};qrrows=(out/'qr_decodes.jsonl').open('x');max_camera_error=0;max_lidar_ref_error=0
++max_camera_error=0;max_lidar_ref_error=0
+ with Reader(bag) as reader:
+  assert {c.topic:c.msgtype for c in reader.connections}==dict(topics().values())
+  for conn,stamp,raw in reader.messages():
+@@ -69,7 +68,7 @@
+    v=json.loads(msg.data);mapping_rows.append(v)
+    if v['type']=='completion' and 'selected_raw_files' in v:completions.append(v)
+   elif k=='static':
+-   assert len(msg.transforms)==9 and len({t.child_frame_id for t in msg.transforms})==9
++   assert len(msg.transforms)==7 and len({t.child_frame_id for t in msg.transforms})==7
+    for t in msg.transforms:
+     expected=next(v for v in producer['static_transforms'] if v['child']==t.child_frame_id)
+     assert t.header.frame_id==expected['parent'] and ns(t.header.stamp)==producer['origin']['stamp_ns']
+@@ -94,18 +93,8 @@
+    actualnative=row['native_simulation_time'];actualnative=float(actualnative.get('simulationTime') if isinstance(actualnative,dict) else actualnative)
+    err=max(abs(round(row['reference_sim_s']*1e9)-stampns),abs(round(actualnative*1e9)-stampns));max_camera_error=max(max_camera_error,err)
+    rgb=np.frombuffer(data,np.uint8).reshape(msg.height,msg.width,3)
+-   # One image-only scan; expected epoch/step/robot pose never enters detector.
+-   found=detect_board(rgb,[0,0,msg.width,msg.height],DEFAULT_VISION_LAYOUT)
+-   candidates=[found] if found.get('valid') else found.get('candidates',[])
+-   unknown=[c['board_id'] for c in candidates if c['board_id'] not in (101,201)];assert not unknown,unknown
+-   result={'camera_id':cid,'image_stamp_ns':stampns,'source_index':row['index'],'detector_status':found['status'],'boards':{}}
+-   for bid in (101,201):
+-    stats=qr[cid][str(bid)];stats['images']+=1;matches=[c for c in candidates if c['board_id']==bid]
+-    if len(matches)!=1:stats['unreadable']+=1;result['boards'][str(bid)]={'valid':False,'candidate_count':len(matches)};continue
+-    d=matches[0]['decoded'];stats['valid']+=1;observed=stepindex.get((d['epoch'],d['tick']));good=observed==stampns
+-    stats['match' if good else 'wrong_time']+=1;stats['valid_steps'].append(d['tick']);result['boards'][str(bid)]={'valid':True,'decoded':d,'observed_global_ns':observed,'matches_header':good,'corners':matches[0]['corners_image_xy']}
+-   qrrows.write(json.dumps(result)+'\n');qrrows.flush();imagechecks+=1
+-   if row['index'] in (0,120,180,spec['ticks']):
++   imagechecks+=1
++   if row['index'] in (0,120,180,900,spec['ticks']):
+     preview=cv2.cvtColor(cv2.resize(rgb,(round(msg.width*min(1,1200/msg.width)),round(msg.height*min(1,1200/msg.width)))),cv2.COLOR_RGB2BGR);assert cv2.imwrite(str(out/(cid+'_'+str(row['index'])+'.png')),preview)
+    if imagechecks%12==0:save('progress.json',{'images_checked':imagechecks,'expected_images':len(images),'messages':sum(counts.values())})
+   elif k.endswith('_info'):
+@@ -114,7 +103,6 @@
+    assert (msg.width,msg.height)==(cal['width'],cal['height']) and np.allclose(msg.k,ck) and np.array_equal(msg.r,np.eye(3).reshape(-1)) and np.array_equal(msg.d,np.zeros(5))
+    assert np.allclose(msg.p,[ck[0],0.,ck[2],0.,0.,ck[4],ck[5],0.,0.,0.,1.,0.]) and msg.binning_x==msg.binning_y==0
+    assert msg.roi.x_offset==msg.roi.y_offset==msg.roi.height==msg.roi.width==0 and not msg.roi.do_rectify;info_checks+=1
+-qrrows.close()
+ assert counts==collections.Counter(json.loads((case/'publisher_done.json').read_text())['counts'])==collections.Counter(json.loads((case/'subscriber_done.json').read_text())['counts'])
+ assert clockstamps==[r['stamp_ns'] for r in states] and imagechecks==info_checks==len(images) and gtchecks==4*len(states) and cloudchecks==len(eventindex)
+ assert [r['selected_raw_files'] for r in completions]==[r['selected_raw_files'] for r in states]
+@@ -160,32 +148,25 @@
+         assert cycle['last_nonempty']=={e['sensor']:e['raw_file'] for e in own if 'pointcloud' in e}
+         assert cycle['rejected_native_packets']==sum(bool(e.get('rejected_native_packet')) for e in own)
+ selected={r['raw_file'] for r in events if 'pointcloud' in r};assert all(set(r['selected_raw_files'])=={'drone','rover'} and set(r['selected_raw_files'].values())<=selected for r in states)
+-assert session['source_hashes'] and session['spec']==spec and session['scene']['boards']['drone']['board_id']==101 and session['scene']['boards']['rover']['board_id']==201
++assert session['source_hashes'] and session['spec']==spec and session['scene']['boards']=={}
++assert spec['qr_boards_enabled'] is False and session['scene']['qr_boards_enabled'] is False
++assert session['qr_verification']['image_content_time_verified'] is None
++assert producer['qr_absence_initial']['active_fixture_paths']==producer['qr_absence_final']['active_fixture_paths']==[]
++assert session['qr_absence_initial']==producer['qr_absence_initial']
++assert not any(t['child'].endswith('/qr') for t in producer['static_transforms'])
++layer_text=(case/'recording_session.usda').read_text()
++assert not any(token in layer_text for token in ('ValidationTimeBoard_', 'Stage1ValidationMarkers', 'Stage2ValidationMarkers', 'ValidationColorPlane'))
++assert session['validation_provenance']==json.loads((M/'stage2/integration_20260920_v6/VALIDATION_PROVENANCE.json').read_text())
+ assert session['recording_session_sha256']==hashlib.sha256((case/'recording_session.usda').read_bytes()).hexdigest()
+ for rel,sha in session['source_hashes'].items():assert hashlib.sha256((M/rel).read_bytes()).hexdigest()==sha,rel
+ assert max_camera_error==0
+ con=sqlite3.connect(db.as_uri()+'?mode=ro&immutable=1',uri=True);assert con.execute('pragma quick_check').fetchone()[0]=='ok';con.close();after=fingerprint(db);assert after==before and fingerprint(bag/'metadata.yaml')==yamlbefore
+-valid=sum(r['valid'] for c in qr.values() for r in c.values());wrong=sum(r['wrong_time']+r['wrong_identity'] for c in qr.values() for r in c.values());assert wrong==0
+-for c in qr.values():
+- for r in c.values():r['valid_step_range']=[min(r['valid_steps']),max(r['valid_steps'])] if r['valid_steps'] else None
+-result={'status':'pass','scope':'native actual-aircraft integrated validation; explicit scene-step mapping; QR evidence only on valid independently decoded boards; direct actual-aircraft LiDAR content and fine beam time unverified','case':str(case),'bag':str(bag),'db_fingerprint':before,'db_preserved':True,'topic_counts':dict(counts),'messages':sum(counts.values()),'image_source_hash_checks':imagechecks,'camera_info_checks':info_checks,'gt_readback_checks':gtchecks,'clock_steps':len(states),'sim_duration_s':(states[-1]['stamp_ns']-states[0]['stamp_ns'])/1e9,'route_interval_s':[states[0]['route_s'],states[-1]['route_s']],'raw_lidar_payload_checks':cloudchecks,'valid_points':dict(points),'points_outside_own_native_frame':dict(outside),'selected_states':len(completions),'camera_metadata_max_error_ns':max_camera_error,'lidar_reference_max_error_ns':max_lidar_ref_error,'qr':qr,'valid_qr_total':valid,'wrong_qr_total':wrong,'both_robot_image_content_evidence':all(sum(c[str(bid)]['valid'] for c in qr.values())>0 for bid in (101,201)),'native_point_acquisition_global_time_verified':False,'moving_lidar_content_time_verified':False,'all_sensor_acquisition_sync_verified':False,'publisher_dds_exact_cdr':wire_exact,'publisher_dds_string_padding_only':padding,'dds_bag_exact_cdr':sum(counts.values()),'source_hashes_embedded':len(session['source_hashes']),'static_tf_count':9,'sqlite_quick_check':'ok'}
++result={'status':'pass','scope':'QR-free actual-aircraft collection; camera/GT/global metadata and calibrated60Hz LiDAR scene-step mapping; no direct QR content evidence or fine global beam-time certification','case':str(case),'bag':str(bag),'db_fingerprint':before,'db_preserved':True,'topic_counts':dict(counts),'messages':sum(counts.values()),'image_source_hash_checks':imagechecks,'camera_info_checks':info_checks,'gt_readback_checks':gtchecks,'clock_steps':len(states),'sim_duration_s':(states[-1]['stamp_ns']-states[0]['stamp_ns'])/1e9,'route_interval_s':[states[0]['route_s'],states[-1]['route_s']],'raw_lidar_payload_checks':cloudchecks,'valid_points':dict(points),'points_outside_own_native_frame':dict(outside),'selected_states':len(completions),'camera_metadata_max_error_ns':max_camera_error,'lidar_reference_max_error_ns':max_lidar_ref_error,'qr_verification':{'status':'not_performed_qr_removed','valid_qr_total':None,'wrong_qr_total':None},'camera_image_content_time_verified':None,'qr_absence_verified':True,'native_point_acquisition_global_time_verified':False,'moving_lidar_content_time_verified':False,'all_sensor_acquisition_sync_verified':False,'publisher_dds_exact_cdr':wire_exact,'publisher_dds_string_padding_only':padding,'dds_bag_exact_cdr':sum(counts.values()),'source_hashes_embedded':len(session['source_hashes']),'static_tf_count':7,'sqlite_quick_check':'ok'}
+ result['publisher_dds_trailing_zero_padding_only']=result.pop('publisher_dds_string_padding_only')
+-decoded_rows=lines(out/'qr_decodes.jsonl');negative_wrong_mapping=0;negative_previous=0;previous={}
+-for row in decoded_rows:
+- for bid,value in row['boards'].items():
+-  key=(row['camera_id'],bid)
+-  if value['valid']:
+-   d=value['decoded'];negative_wrong_mapping+=int(stepindex.get((d['epoch'],d['tick']-1))!=row['image_stamp_ns'])
+-  if key in previous:
+-   d=previous[key];assert stepindex.get((d['epoch'],d['tick']))!=row['image_stamp_ns'];negative_previous+=1
+-  if value['valid']:previous[key]=value['decoded']
+-  else:previous.pop(key,None)
+-result['negative_wrong_step_mapping_detected']=negative_wrong_mapping
+-result['negative_actual_previous_image_decodes_detected']=negative_previous
+ result['route_motion_check']={'maximum_position_error_m':max(route_errors),'rover_stationary_turn_state_count':turn_states,'criterion':'motion compliance only; NEVER a sensor timing criterion','actual_samples':[{k:r[k] for k in ['clock','route_s','robots']} for i,r in enumerate(states) if i in (0,120,150,180,spec['ticks'])]}
+ result['native_header_minus_global_observation_ns']={robot:{'min':min(r['native_header_ns']-r['stamp_ns'] for r in events if r['sensor']==robot and 'pointcloud' in r),'max':max(r['native_header_ns']-r['stamp_ns'] for r in events if r['sensor']==robot and 'pointcloud' in r)} for robot in ('drone','rover')}
+ result['all_native_raw_snapshot_hash_checks']=raw_checked;result['zero_element_diagnostic_headers_checked']=empty_diagnostic_headers;result['rejected_native_packets']={'count':len(rejected_checked),'files':rejected_checked,'retained_raw':True,'included_as_pointcloud':False};result['completion_cycle_checks']=cycle_summary;result['two_fixed_completion_cycles_verified']=True
+ from audit_scene_mapping import audit_mapping
+ result['scene_mapping']=audit_mapping(case,states,events,mapping_rows,session,out)
+-result['qr_coverage_by_second']={cid:{str(bid):{str(second):sum(row['camera_id']==cid and int(row['source_index']/60)==second and row['boards'][str(bid)]['valid'] for row in decoded_rows) for second in range(spec['ticks']//60+1)} for bid in (101,201)} for cid in qr}
++result['agreed_scene_step_sync_pass']=bool(result['scene_mapping']['selected_scene_step_mapping_pass'] and max_camera_error==0 and max_lidar_ref_error==0)
+ save('AUDIT.json',result);print(json.dumps({k:v for k,v in result.items() if k!='qr'}))

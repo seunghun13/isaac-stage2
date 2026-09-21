@@ -1,0 +1,65 @@
+{
+  "schema": "mro_stage1_waypoints_v1",
+  "purpose": "editable_stage1_demo_not_final_research_route",
+  "frame_id": "world",
+  "reference": "TrackingCenter",
+  "position_unit": "m",
+  "time_unit": "s",
+  "interpolation": "piecewise_constant_speed",
+  "boundary_rule": "next_segment_then_terminal_stop",
+  "speed_m_s": 1.0,
+  "fixed_orientation": {
+    "frame_id": "world",
+    "rpy_degrees": [
+      0.0,
+      0.0,
+      180.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "position_bounds_m": {
+    "min": [
+      -50.0,
+      -50.0,
+      0.0
+    ],
+    "max": [
+      50.0,
+      80.0,
+      20.0
+    ]
+  },
+  "play_on_load": false,
+  "waypoints_m": [
+    [
+      5.0,
+      0.0,
+      0.1665
+    ],
+    [
+      5.0,
+      0.0,
+      5.0
+    ],
+    [
+      5.0,
+      10.0,
+      5.0
+    ],
+    [
+      5.0,
+      0.0,
+      5.0
+    ],
+    [
+      5.0,
+      0.0,
+      0.1665
+    ]
+  ]
+}

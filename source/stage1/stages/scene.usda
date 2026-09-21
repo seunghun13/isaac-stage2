@@ -1,0 +1,43 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 1780.02
+    framesPerSecond = 60
+    metersPerUnit = 1
+    startTimeCode = 0
+    subLayers = [
+        @/mnt/DATA/workspace/ws_minho/mro_1/stage1/stages/overrides.usda@,
+        @/mnt/DATA/workspace/ws_minho/mro_1/hangar/scene.usda@
+    ]
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+over "Render" (
+    hide_in_stage_window = true
+)
+{
+    over "OmniverseKit"
+    {
+        over "HydraTextures"
+        {
+            over "omni_kit_widget_viewport_ViewportTexture_0"
+            {
+                rel camera = </OmniverseKit_Persp>
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1920, 1080)
+            }
+        }
+    }
+}
+
+over "World"
+{
+    over "PhysicsScene" (
+        prepend apiSchemas = ["PhysxSceneAPI"]
+    )
+    {
+    }
+}
+

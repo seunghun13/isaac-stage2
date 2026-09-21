@@ -1,0 +1,27 @@
+{
+  "schema": "stage2_final_noqr_acceptance_v1",
+  "user_authorized_qr_removal_and_proceed": true,
+  "accepted_scope": "global_metadata_and_calibrated_60hz_scene_step",
+  "requires_before_final30s": [
+    "noqr_source_diff_check",
+    "native1s_and_turn_including5s_bag_audits",
+    "unchanged_clock_render_selection_payload_logic",
+    "no_active_qr_or_color_fixtures",
+    "18_topics_7_static_tf",
+    "explicit_mapping_and_original_native_times",
+    "replay_and_storage_readiness"
+  ],
+  "final_requires": [
+    "complete30s_route",
+    "wholebag_inventory_hash_and_CDR_audit",
+    "1801_global_states_and1353RGB",
+    "selected_point_unique_current_scene_step_mapping",
+    "readonly_DB_preservation"
+  ],
+  "camera_image_content_time_verified": null,
+  "fine_global_beam_emission_verified": false,
+  "all_sensor_acquisition_sync_verified": false,
+  "no_claim_of_equal_RGB_or_point_returns_after_QR_removal": true,
+  "no_100percent_QR_readability_requirement": true,
+  "supersedes": "Prior gate blocking QR removal for missing direct QR content evidence; user explicitly accepted scene-step synchronization scope and requested removal. Prior evidence/results remain unchanged."
+}

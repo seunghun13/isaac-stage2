@@ -1,0 +1,1324 @@
+#usda 1.0
+(
+    endTimeCode = 1780.02
+    framesPerSecond = 60
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+)
+
+def Camera "OmniverseKit_Persp" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (0.01, 10000000)
+    float focalLength = 18.147562
+    float focusDistance = 400
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -8.660254037844386)
+    float3 xformOp:rotateXYZ = (54.73561, -6.3611094e-15, 135)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (5, 5, 5)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+def Camera "OmniverseKit_Front" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 50
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -5)
+    token projection = "orthographic"
+    float verticalAperture = 50
+    float3 xformOp:rotateXYZ = (90, -1.2722219e-14, 90)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (5, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+def Camera "OmniverseKit_Top" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 50
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -5)
+    token projection = "orthographic"
+    float verticalAperture = 50
+    float3 xformOp:rotateXYZ = (-1.2722219e-14, -7.016709e-15, -90)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 5)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+def Camera "OmniverseKit_Right" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 50
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -5)
+    token projection = "orthographic"
+    float verticalAperture = 50
+    float3 xformOp:rotateXYZ = (90, -1.41245e-30, 1.2722219e-14)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, -5, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "Render"
+{
+    over "OmniverseKit"
+    {
+        over "HydraTextures"
+        {
+            over "omni_kit_widget_viewport_ViewportTexture_0"
+            {
+                custom uint64 viewPickingId = 719077486592355
+                custom int viewportHandle = 0
+            }
+        }
+    }
+}
+
+over "World"
+{
+    over "PhysicsScene" (
+        active = false
+    )
+    {
+    }
+
+    over "rover_1" (
+        active = false
+    )
+    {
+    }
+
+    over "rover_2" (
+        active = false
+    )
+    {
+    }
+
+    over "drone_2" (
+        active = false
+    )
+    {
+    }
+
+    over "drone_3" (
+        active = false
+    )
+    {
+    }
+
+    over "drone_4" (
+        active = false
+    )
+    {
+    }
+
+    over "Waypoints" (
+        active = false
+    )
+    {
+    }
+
+    over "drone_1" (
+        variants = {
+            string Physics = "None"
+            string Sensor = "None"
+        }
+    )
+    {
+        double xformOp:rotateZ:stage1 = 180
+        double3 xformOp:translate:stage1 = (5, 0.00021679140627384186, 0.26800037612766026)
+        double3 xformOp:translate:stage1.timeSamples = {
+            0: (5, 0.00021679140627384186, 0.26800037612766026),
+            290.01: (5, 0.00021679140627384186, 5.10150037612766),
+            890.01: (5, 10.000216791406274, 5.10150037612766),
+            1490.01: (5, 0.00021679140627384186, 5.10150037612766),
+            1780.02: (5, 0.00021679140627384186, 0.26800037612766026),
+        }
+        uniform token[] xformOpOrder = ["!resetXformStack!", "xformOp:translate:stage1", "xformOp:rotateZ:stage1"]
+
+        over "base_link"
+        {
+            def Xform "TrackingCenter" (
+                customData = {
+                    dictionary stage1 = {
+                        string definition_sha256 = "0fb536f0174f3a5e2d517f07286728bfa7cb5f379ba2adcf83fcd2de1f629868"
+                    }
+                }
+            )
+            {
+                double3 xformOp:translate = (0, 0.00021679140627384186, -0.10150037612766027)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Xform "Stage1LidarMount" (
+                customData = {
+                    dictionary stage1 = {
+                        string lidar_profile = "OS1_REV6_32ch10hz512res"
+                    }
+                }
+            )
+            {
+                double3 xformOp:translate = (0, 0, 0.107)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                def Xform "SensorModel" (
+                    prepend references = @/mnt/DATA/workspace/ws_minho/mro_1/runtime/assets/sensors/Ouster/OS1/OS1.usd@
+                    variants = {
+                        string sensor = "OS1_REV6_32ch10hz512res"
+                    }
+                    prepend variantSets = "sensor"
+                )
+                {
+                    over "sensor"
+                    {
+                        token omni:sensor:Core:auxOutputType = "NONE"
+                        bool omni:sensor:Core:skipDroppingInvalidPoints = 1
+                    }
+                }
+            }
+        }
+    }
+}
+
+def Xform "MRO_Cameras" (
+    customData = {
+        dictionary mro = {
+            string layoutHash = "3b13816c8c0e0e1db054861648394fe202be40a44957338ba8ad02eba87a298e"
+            string owner = "mro_camera_layout_runtime_v1"
+        }
+    }
+)
+{
+    def Camera "cam_01" (
+        customData = {
+            dictionary mro = {
+                string cameraConfigJson = '{"camera_id": "cam_01", "focal_length_mm": 3.02, "horizontal_fov_deg": 103.63284894025476, "id": "cam_01", "intrinsics": {"cx_px": 1920.0, "cy_px": 1080.0, "fx_px": 1510.0, "fy_px": 1510.0}, "model": "zed_x_one_4k_wide", "model_id": "zed_x_one_4k_wide", "native_resolution_px": [3840, 2160], "orientation_wxyz": [0.6342768405256743, 0.6683883284719581, 0.2818244497624964, 0.2674414168585268], "pose": {"target_m": [0.0, 19.5, 3.063904163785566], "type": "look_at", "up_world": [0, 0, 1]}, "pose_convention": "USD camera local +X right, +Y up, -Z forward; quaternion local-to-world wxyz", "position_m": [20.0, 0.0, 1.6], "prim_path": "/MRO_Cameras/cam_01", "render_product_created": false, "resolution_mode": "native", "resolution_px": [3840, 2160], "scheduled_fps": 15.0, "sensor_height_mm": 4.32, "sensor_width_mm": 7.68, "usd_lens_representation": {"authored_usd_camera_units": {"focalLength": 3.02, "horizontalAperture": 7.68, "verticalAperture": 4.32}, "canonical_usd_camera_units": {"focalLength": 0.0302, "horizontalAperture": 0.0768, "verticalAperture": 0.0432}, "depth_of_field_enabled": false, "evidence": "outputs/projection_20260909T160757_91dfb509/diagnostic.json", "homogeneous_scale": 100.0, "kind": "homogeneous_pinhole_representation", "physical_reference_mm": {"focal_length_mm": 3.02, "sensor_height_mm": 4.32, "sensor_width_mm": 7.68}, "physical_values_are_not_scaled": true, "scope": "Preserves centered pinhole K/FOV only; no physical lens-size or DOF claim", "version": 2}, "vertical_fov_deg": 71.1471098382063}'
+                string owner = "mro_camera_layout_runtime_v1"
+            }
+        }
+    )
+    {
+        float2 clippingRange = (0.1, 200)
+        float focalLength = 3.02
+        float fStop = 0
+        float horizontalAperture = 7.68
+        float horizontalApertureOffset = 0
+        token projection = "perspective"
+        double shutter:close = 0
+        double shutter:open = 0
+        float verticalAperture = 4.32
+        float verticalApertureOffset = 0
+        quatd xformOp:orient = (0.6342768405256743, 0.6683883284719581, 0.2818244497624964, 0.2674414168585268)
+        double3 xformOp:translate = (20, 0, 1.6)
+        uniform token[] xformOpOrder = ["!resetXformStack!", "xformOp:translate", "xformOp:orient"]
+    }
+
+    def Camera "cam_02" (
+        customData = {
+            dictionary mro = {
+                string cameraConfigJson = '{"camera_id": "cam_02", "focal_length_mm": 12.0, "horizontal_fov_deg": 62.546200576617096, "id": "cam_02", "intrinsics": {"cx_px": 2660.0, "cy_px": 2300.0, "fx_px": 4379.56204379562, "fy_px": 4379.56204379562}, "model": "flir_bfs_u3_244s8c_kowa_lm12xc", "model_id": "flir_bfs_u3_244s8c_kowa_lm12xc", "native_resolution_px": [5320, 4600], "orientation_wxyz": [0.48266754506534615, 0.5086254661080151, 0.5171731947306206, 0.4907790366540936], "pose": {"target_m": [0.0, 19.5, 3.1724517290760668], "type": "look_at", "up_world": [0, 0, 1]}, "pose_convention": "USD camera local +X right, +Y up, -Z forward; quaternion local-to-world wxyz", "position_m": [30.0, 20.0, 1.6], "prim_path": "/MRO_Cameras/cam_02", "render_product_created": false, "resolution_mode": "native", "resolution_px": [5320, 4600], "scheduled_fps": 15.0, "sensor_height_mm": 12.604, "sensor_width_mm": 14.5768, "usd_lens_representation": {"authored_usd_camera_units": {"focalLength": 12.0, "horizontalAperture": 14.5768, "verticalAperture": 12.604}, "canonical_usd_camera_units": {"focalLength": 0.12, "horizontalAperture": 0.145768, "verticalAperture": 0.12603999999999999}, "depth_of_field_enabled": false, "evidence": "outputs/projection_20260909T160757_91dfb509/diagnostic.json", "homogeneous_scale": 100.0, "kind": "homogeneous_pinhole_representation", "physical_reference_mm": {"focal_length_mm": 12.0, "sensor_height_mm": 12.604, "sensor_width_mm": 14.5768}, "physical_values_are_not_scaled": true, "scope": "Preserves centered pinhole K/FOV only; no physical lens-size or DOF claim", "version": 2}, "vertical_fov_deg": 55.41391653868257}'
+                string owner = "mro_camera_layout_runtime_v1"
+            }
+        }
+    )
+    {
+        float2 clippingRange = (0.1, 200)
+        float focalLength = 12
+        float fStop = 0
+        float horizontalAperture = 14.5768
+        float horizontalApertureOffset = 0
+        token projection = "perspective"
+        double shutter:close = 0
+        double shutter:open = 0
+        float verticalAperture = 12.604
+        float verticalApertureOffset = 0
+        quatd xformOp:orient = (0.48266754506534615, 0.5086254661080151, 0.5171731947306206, 0.4907790366540936)
+        double3 xformOp:translate = (30, 20, 1.6)
+        uniform token[] xformOpOrder = ["!resetXformStack!", "xformOp:translate", "xformOp:orient"]
+    }
+
+    def Camera "cam_03" (
+        customData = {
+            dictionary mro = {
+                string cameraConfigJson = '{"camera_id": "cam_03", "focal_length_mm": 3.02, "horizontal_fov_deg": 103.63284894025476, "id": "cam_03", "intrinsics": {"cx_px": 1920.0, "cy_px": 1080.0, "fx_px": 1510.0, "fy_px": 1510.0}, "model": "zed_x_one_4k_wide", "model_id": "zed_x_one_4k_wide", "native_resolution_px": [3840, 2160], "orientation_wxyz": [0.2594914392179462, 0.2734469213284245, 0.6718591811812042, 0.6375705567630355], "pose": {"target_m": [0.0, 19.5, 3.1009591646423678], "type": "look_at", "up_world": [0, 0, 1]}, "pose_convention": "USD camera local +X right, +Y up, -Z forward; quaternion local-to-world wxyz", "position_m": [20.0, 40.0, 1.6], "prim_path": "/MRO_Cameras/cam_03", "render_product_created": false, "resolution_mode": "native", "resolution_px": [3840, 2160], "scheduled_fps": 15.0, "sensor_height_mm": 4.32, "sensor_width_mm": 7.68, "usd_lens_representation": {"authored_usd_camera_units": {"focalLength": 3.02, "horizontalAperture": 7.68, "verticalAperture": 4.32}, "canonical_usd_camera_units": {"focalLength": 0.0302, "horizontalAperture": 0.0768, "verticalAperture": 0.0432}, "depth_of_field_enabled": false, "evidence": "outputs/projection_20260909T160757_91dfb509/diagnostic.json", "homogeneous_scale": 100.0, "kind": "homogeneous_pinhole_representation", "physical_reference_mm": {"focal_length_mm": 3.02, "sensor_height_mm": 4.32, "sensor_width_mm": 7.68}, "physical_values_are_not_scaled": true, "scope": "Preserves centered pinhole K/FOV only; no physical lens-size or DOF claim", "version": 2}, "vertical_fov_deg": 71.1471098382063}'
+                string owner = "mro_camera_layout_runtime_v1"
+            }
+        }
+    )
+    {
+        float2 clippingRange = (0.1, 200)
+        float focalLength = 3.02
+        float fStop = 0
+        float horizontalAperture = 7.68
+        float horizontalApertureOffset = 0
+        token projection = "perspective"
+        double shutter:close = 0
+        double shutter:open = 0
+        float verticalAperture = 4.32
+        float verticalApertureOffset = 0
+        quatd xformOp:orient = (0.2594914392179462, 0.2734469213284245, 0.6718591811812042, 0.6375705567630355)
+        double3 xformOp:translate = (20, 40, 1.6)
+        uniform token[] xformOpOrder = ["!resetXformStack!", "xformOp:translate", "xformOp:orient"]
+    }
+}
+
+def Xform "MRO_CameraRigs" (
+    customData = {
+        dictionary mro = {
+            string geometryPlanHash = "7bb396e92f90d063d36f632741c5b4d2fd5c53ff34bf09a0b5d4b17e4a42e9c1"
+            string layoutHash = "3b13816c8c0e0e1db054861648394fe202be40a44957338ba8ad02eba87a298e"
+            string owner = "mro_camera_rig_visuals_v1"
+            bool semanticVisualProxy = 1
+        }
+    }
+)
+{
+    token visibility = "inherited"
+    uniform token[] xformOpOrder = ["!resetXformStack!"]
+
+    def Xform "cam_01" (
+        customData = {
+            dictionary mro = {
+                string cameraId = "cam_01"
+                string cameraPrimPath = "/MRO_Cameras/cam_01"
+                string model = "zed_x_one_4k_wide"
+                string owner = "mro_camera_rig_visuals_v1"
+                string rigSpecJson = '{"body_center_local_m": [0.0, 0.0, 0.08], "body_size_local_m": [0.15, 0.1, 0.1], "camera_id": "cam_01", "camera_prim_path": "/MRO_Cameras/cam_01", "label_anchor_world_m": [20.0, 0.0, 1.83], "label_text": "cam_01 \\u00b7 ZED", "lens_front_center_local_m": [0.0, 0.0, 0.0], "lens_length_m": 0.03, "lens_radius_m": 0.027, "model": "zed_x_one_4k_wide", "model_accent_display_color": [0.1, 0.36, 0.44], "mount_position_world_m": [20.055327883306184, -0.05394468622352831, 1.5458816467628358], "optical_forward_world": [-0.7150188863129714, 0.6971434141551469, 0.05233595624294374], "optical_orientation_wxyz": [0.6342768405256743, 0.6683883284719581, 0.2818244497624964, 0.2674414168585268], "optical_position_world_m": [20.0, 0.0, 1.6], "rig_prim_path": "/MRO_CameraRigs/cam_01", "tripod_feet_world_m": [[20.405327883306185, -0.05394468622352831, 0.018], [19.880327883306183, 0.24916420510102522, 0.018], [19.880327883306183, -0.35705357754808176, 0.018]], "tripod_hub_world_m": [20.055327883306184, -0.05394468622352831, 1.35], "tripod_rods": {"brace_1": {"center_m": [20.169077883306187, -0.05394468622352831, 0.4671], "end_m": [20.282827883306187, -0.05394468622352831, 0.4842], "length_m": 0.23005627572400894, "orientation_wxyz": [0.7578453927611272, -0.0, 0.6524341811023798, 0.0], "radius_m": 0.005, "start_m": [20.055327883306184, -0.05394468622352831, 0.45]}, "brace_2": {"center_m": [19.998452883306186, 0.04456570345695158, 0.4671], "end_m": [19.941577883306184, 0.14307609313743147, 0.4842], "length_m": 0.23005627572400608, "orientation_wxyz": [0.7578453927611278, -0.565024575131958, -0.3262170905511887, 0.0], "radius_m": 0.005, "start_m": [20.055327883306184, -0.05394468622352831, 0.45]}, "brace_3": {"center_m": [19.998452883306186, -0.1524550759040082, 0.4671], "end_m": [19.941577883306184, -0.25096546558448807, 0.4842], "length_m": 0.23005627572400603, "orientation_wxyz": [0.7578453927611277, 0.5650245751319579, -0.3262170905511887, 0.0], "radius_m": 0.005, "start_m": [20.055327883306184, -0.05394468622352831, 0.45]}, "center_column": {"center_m": [20.055327883306184, -0.05394468622352831, 1.447940823381418], "end_m": [20.055327883306184, -0.05394468622352831, 1.5458816467628358], "length_m": 0.1958816467628357, "orientation_wxyz": [1.0, -0.0, 0.0, 0.0], "radius_m": 0.014, "start_m": [20.055327883306184, -0.05394468622352831, 1.35]}, "leg_1": {"center_m": [20.230327883306185, -0.05394468622352831, 0.684], "end_m": [20.055327883306184, -0.05394468622352831, 1.35], "length_m": 1.3772160324364515, "orientation_wxyz": [0.9917581675855881, -0.0, -0.12812391278475843, 0.0], "radius_m": 0.012, "start_m": [20.405327883306185, -0.05394468622352831, 0.018]}, "leg_2": {"center_m": [19.967827883306185, 0.09760975943874844, 0.684], "end_m": [20.055327883306184, -0.05394468622352831, 1.35], "length_m": 1.3772160324364513, "orientation_wxyz": [0.9917581675855882, 0.11095856330386222, 0.06406195639237924, 0.0], "radius_m": 0.012, "start_m": [19.880327883306183, 0.24916420510102522, 0.018]}, "leg_3": {"center_m": [19.967827883306185, -0.20549913188580504, 0.684], "end_m": [20.055327883306184, -0.05394468622352831, 1.35], "length_m": 1.3772160324364513, "orientation_wxyz": [0.9917581675855882, -0.11095856330386218, 0.06406195639237924, 0.0], "radius_m": 0.012, "start_m": [19.880327883306183, -0.35705357754808176, 0.018]}, "lower_column": {"center_m": [20.055327883306184, -0.05394468622352831, 0.9], "end_m": [20.055327883306184, -0.05394468622352831, 1.35], "length_m": 0.9000000000000001, "orientation_wxyz": [1.0, -0.0, 0.0, 0.0], "radius_m": 0.009, "start_m": [20.055327883306184, -0.05394468622352831, 0.45]}}}'
+                bool semanticVisualProxy = 1
+            }
+        }
+    )
+    {
+        token visibility = "inherited"
+
+        def Xform "OpticalFrame" (
+            customData = {
+                dictionary mro = {
+                    string owner = "mro_camera_rig_visuals_v1"
+                    bool semanticVisualProxy = 1
+                }
+            }
+        )
+        {
+            quatd xformOp:orient = (0.6342768405256743, 0.6683883284719581, 0.2818244497624964, 0.2674414168585268)
+            double3 xformOp:translate = (20, 0, 1.6)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+
+            def Cube "Housing" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.14, 0.15, 0.16)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.15, 0.1, 0.1)
+                double3 xformOp:translate = (0, 0, 0.08)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "ModelAccent" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.1, 0.36, 0.44)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.075, 0.002, 0.055)
+                double3 xformOp:translate = (0, 0.0505, 0.085)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cylinder "LensBarrel" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.03
+                color3f[] primvars:displayColor = [(0.055, 0.06, 0.065)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.027
+                double3 xformOp:translate = (0, 0, 0.015)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "LensGlass" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.001
+                color3f[] primvars:displayColor = [(0.04, 0.1, 0.14)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.02268
+                double3 xformOp:translate = (0, 0, 0.0005)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "Tripod" (
+            customData = {
+                dictionary mro = {
+                    string owner = "mro_camera_rig_visuals_v1"
+                    bool semanticVisualProxy = 1
+                }
+            }
+        )
+        {
+            def Cylinder "center_column" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.1958816467628357
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.014
+                quatd xformOp:orient = (1, -0, 0, 0)
+                double3 xformOp:translate = (20.055327883306184, -0.05394468622352831, 1.447940823381418)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364515
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855881, -0, -0.12812391278475843, 0)
+                double3 xformOp:translate = (20.230327883306185, -0.05394468622352831, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364513
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855882, 0.11095856330386222, 0.06406195639237924, 0)
+                double3 xformOp:translate = (19.967827883306185, 0.09760975943874844, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364513
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855882, -0.11095856330386218, 0.06406195639237924, 0)
+                double3 xformOp:translate = (19.967827883306185, -0.20549913188580504, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "lower_column" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.9000000000000001
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.009
+                quatd xformOp:orient = (1, -0, 0, 0)
+                double3 xformOp:translate = (20.055327883306184, -0.05394468622352831, 0.9)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400894
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611272, -0, 0.6524341811023798, 0)
+                double3 xformOp:translate = (20.169077883306187, -0.05394468622352831, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400608
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611278, -0.565024575131958, -0.3262170905511887, 0)
+                double3 xformOp:translate = (19.998452883306186, 0.04456570345695158, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400603
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611277, 0.5650245751319579, -0.3262170905511887, 0)
+                double3 xformOp:translate = (19.998452883306186, -0.1524550759040082, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "Foot_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (20.405327883306185, -0.05394468622352831, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Foot_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (19.880327883306183, 0.24916420510102522, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Foot_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (19.880327883306183, -0.35705357754808176, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cube "Head" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.055, 0.055, 0.03)
+                double3 xformOp:translate = (20.055327883306184, -0.05394468622352831, 1.5458816467628358)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+
+    def Xform "cam_02" (
+        customData = {
+            dictionary mro = {
+                string cameraId = "cam_02"
+                string cameraPrimPath = "/MRO_Cameras/cam_02"
+                string model = "flir_bfs_u3_244s8c_kowa_lm12xc"
+                string owner = "mro_camera_rig_visuals_v1"
+                string rigSpecJson = '{"body_center_local_m": [0.0, 0.0, 0.08], "body_size_local_m": [0.15, 0.1, 0.1], "camera_id": "cam_02", "camera_prim_path": "/MRO_Cameras/cam_02", "label_anchor_world_m": [30.0, 20.0, 1.83], "label_text": "cam_02 \\u00b7 FLIR", "lens_front_center_local_m": [0.0, 0.0, 0.0], "lens_length_m": 0.03, "lens_radius_m": 0.027, "model": "flir_bfs_u3_244s8c_kowa_lm12xc", "model_accent_display_color": [0.65, 0.39, 0.1], "mount_position_world_m": [30.077262834764046, 20.001287713912735, 1.5458816467628358], "optical_forward_world": [-0.9984908650969236, -0.016641514418281822, 0.05233595624294418], "optical_orientation_wxyz": [0.48266754506534615, 0.5086254661080151, 0.5171731947306206, 0.4907790366540936], "optical_position_world_m": [30.0, 20.0, 1.6], "rig_prim_path": "/MRO_CameraRigs/cam_02", "tripod_feet_world_m": [[30.427262834764047, 20.001287713912735, 0.018], [29.902262834764045, 20.304396605237287, 0.018], [29.902262834764045, 19.698178822588183, 0.018]], "tripod_hub_world_m": [30.077262834764046, 20.001287713912735, 1.35], "tripod_rods": {"brace_1": {"center_m": [30.191012834764045, 20.001287713912735, 0.4671], "end_m": [30.30476283476405, 20.001287713912735, 0.4842], "length_m": 0.23005627572400894, "orientation_wxyz": [0.7578453927611272, -0.0, 0.6524341811023798, 0.0], "radius_m": 0.005, "start_m": [30.077262834764046, 20.001287713912735, 0.45]}, "brace_2": {"center_m": [30.020387834764044, 20.099798103593216, 0.4671], "end_m": [29.963512834764046, 20.198308493273693, 0.4842], "length_m": 0.2300562757240047, "orientation_wxyz": [0.7578453927611282, -0.5650245751319565, -0.3262170905511904, 0.0], "radius_m": 0.005, "start_m": [30.077262834764046, 20.001287713912735, 0.45]}, "brace_3": {"center_m": [30.020387834764044, 19.902777324232254, 0.4671], "end_m": [29.963512834764046, 19.804266934551777, 0.4842], "length_m": 0.2300562757240047, "orientation_wxyz": [0.7578453927611282, 0.5650245751319565, -0.3262170905511904, 0.0], "radius_m": 0.005, "start_m": [30.077262834764046, 20.001287713912735, 0.45]}, "center_column": {"center_m": [30.077262834764046, 20.001287713912735, 1.447940823381418], "end_m": [30.077262834764046, 20.001287713912735, 1.5458816467628358], "length_m": 0.1958816467628357, "orientation_wxyz": [1.0, -0.0, 0.0, 0.0], "radius_m": 0.014, "start_m": [30.077262834764046, 20.001287713912735, 1.35]}, "leg_1": {"center_m": [30.252262834764046, 20.001287713912735, 0.684], "end_m": [30.077262834764046, 20.001287713912735, 1.35], "length_m": 1.3772160324364515, "orientation_wxyz": [0.9917581675855881, -0.0, -0.12812391278475843, 0.0], "radius_m": 0.012, "start_m": [30.427262834764047, 20.001287713912735, 0.018]}, "leg_2": {"center_m": [29.989762834764043, 20.15284215957501, 0.684], "end_m": [30.077262834764046, 20.001287713912735, 1.35], "length_m": 1.3772160324364509, "orientation_wxyz": [0.9917581675855882, 0.11095856330386163, 0.06406195639237926, 0.0], "radius_m": 0.012, "start_m": [29.902262834764045, 20.304396605237287, 0.018]}, "leg_3": {"center_m": [29.989762834764043, 19.84973326825046, 0.684], "end_m": [30.077262834764046, 20.001287713912735, 1.35], "length_m": 1.3772160324364509, "orientation_wxyz": [0.9917581675855882, -0.11095856330386163, 0.06406195639237926, 0.0], "radius_m": 0.012, "start_m": [29.902262834764045, 19.698178822588183, 0.018]}, "lower_column": {"center_m": [30.077262834764046, 20.001287713912735, 0.9], "end_m": [30.077262834764046, 20.001287713912735, 1.35], "length_m": 0.9000000000000001, "orientation_wxyz": [1.0, -0.0, 0.0, 0.0], "radius_m": 0.009, "start_m": [30.077262834764046, 20.001287713912735, 0.45]}}}'
+                bool semanticVisualProxy = 1
+            }
+        }
+    )
+    {
+        token visibility = "inherited"
+
+        def Xform "OpticalFrame" (
+            customData = {
+                dictionary mro = {
+                    string owner = "mro_camera_rig_visuals_v1"
+                    bool semanticVisualProxy = 1
+                }
+            }
+        )
+        {
+            quatd xformOp:orient = (0.48266754506534615, 0.5086254661080151, 0.5171731947306206, 0.4907790366540936)
+            double3 xformOp:translate = (30, 20, 1.6)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+
+            def Cube "Housing" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.14, 0.15, 0.16)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.15, 0.1, 0.1)
+                double3 xformOp:translate = (0, 0, 0.08)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "ModelAccent" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.65, 0.39, 0.1)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.075, 0.002, 0.055)
+                double3 xformOp:translate = (0, 0.0505, 0.085)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cylinder "LensBarrel" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.03
+                color3f[] primvars:displayColor = [(0.055, 0.06, 0.065)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.027
+                double3 xformOp:translate = (0, 0, 0.015)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "LensGlass" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.001
+                color3f[] primvars:displayColor = [(0.04, 0.1, 0.14)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.02268
+                double3 xformOp:translate = (0, 0, 0.0005)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "Tripod" (
+            customData = {
+                dictionary mro = {
+                    string owner = "mro_camera_rig_visuals_v1"
+                    bool semanticVisualProxy = 1
+                }
+            }
+        )
+        {
+            def Cylinder "center_column" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.1958816467628357
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.014
+                quatd xformOp:orient = (1, -0, 0, 0)
+                double3 xformOp:translate = (30.077262834764046, 20.001287713912735, 1.447940823381418)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364515
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855881, -0, -0.12812391278475843, 0)
+                double3 xformOp:translate = (30.252262834764046, 20.001287713912735, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364509
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855882, 0.11095856330386163, 0.06406195639237926, 0)
+                double3 xformOp:translate = (29.989762834764043, 20.15284215957501, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364509
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855882, -0.11095856330386163, 0.06406195639237926, 0)
+                double3 xformOp:translate = (29.989762834764043, 19.84973326825046, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "lower_column" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.9000000000000001
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.009
+                quatd xformOp:orient = (1, -0, 0, 0)
+                double3 xformOp:translate = (30.077262834764046, 20.001287713912735, 0.9)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400894
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611272, -0, 0.6524341811023798, 0)
+                double3 xformOp:translate = (30.191012834764045, 20.001287713912735, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.2300562757240047
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611282, -0.5650245751319565, -0.3262170905511904, 0)
+                double3 xformOp:translate = (30.020387834764044, 20.099798103593216, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.2300562757240047
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611282, 0.5650245751319565, -0.3262170905511904, 0)
+                double3 xformOp:translate = (30.020387834764044, 19.902777324232254, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "Foot_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (30.427262834764047, 20.001287713912735, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Foot_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (29.902262834764045, 20.304396605237287, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Foot_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (29.902262834764045, 19.698178822588183, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cube "Head" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.055, 0.055, 0.03)
+                double3 xformOp:translate = (30.077262834764046, 20.001287713912735, 1.5458816467628358)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+
+    def Xform "cam_03" (
+        customData = {
+            dictionary mro = {
+                string cameraId = "cam_03"
+                string cameraPrimPath = "/MRO_Cameras/cam_03"
+                string model = "zed_x_one_4k_wide"
+                string owner = "mro_camera_rig_visuals_v1"
+                string rigSpecJson = '{"body_center_local_m": [0.0, 0.0, 0.08], "body_size_local_m": [0.15, 0.1, 0.1], "camera_id": "cam_03", "camera_prim_path": "/MRO_Cameras/cam_03", "label_anchor_world_m": [20.0, 40.0, 1.83], "label_text": "cam_03 \\u00b7 ZED", "lens_front_center_local_m": [0.0, 0.0, 0.0], "lens_length_m": 0.03, "lens_radius_m": 0.027, "model": "zed_x_one_4k_wide", "model_accent_display_color": [0.1, 0.36, 0.44], "mount_position_world_m": [20.053961973552198, 40.055311022891004, 1.545881646762836], "optical_forward_world": [-0.6973668235060064, -0.7148009940936564, 0.05233595624294374], "optical_orientation_wxyz": [0.2594914392179462, 0.2734469213284245, 0.6718591811812042, 0.6375705567630355], "optical_position_world_m": [20.0, 40.0, 1.6], "rig_prim_path": "/MRO_CameraRigs/cam_03", "tripod_feet_world_m": [[20.4039619735522, 40.055311022891004, 0.018], [19.878961973552197, 40.35841991421556, 0.018], [19.878961973552197, 39.75220213156645, 0.018]], "tripod_hub_world_m": [20.053961973552198, 40.055311022891004, 1.35], "tripod_rods": {"brace_1": {"center_m": [20.1677119735522, 40.055311022891004, 0.4671], "end_m": [20.2814619735522, 40.055311022891004, 0.4842], "length_m": 0.23005627572400894, "orientation_wxyz": [0.7578453927611272, -0.0, 0.6524341811023798, 0.0], "radius_m": 0.005, "start_m": [20.053961973552198, 40.055311022891004, 0.45]}, "brace_2": {"center_m": [19.9970869735522, 40.15382141257149, 0.4671], "end_m": [19.9402119735522, 40.252331802251966, 0.4842], "length_m": 0.23005627572400772, "orientation_wxyz": [0.7578453927611275, -0.5650245751319597, -0.3262170905511864, 0.0], "radius_m": 0.005, "start_m": [20.053961973552198, 40.055311022891004, 0.45]}, "brace_3": {"center_m": [19.9970869735522, 39.95680063321052, 0.4671], "end_m": [19.9402119735522, 39.85829024353004, 0.4842], "length_m": 0.23005627572400772, "orientation_wxyz": [0.7578453927611275, 0.5650245751319597, -0.3262170905511864, 0.0], "radius_m": 0.005, "start_m": [20.053961973552198, 40.055311022891004, 0.45]}, "center_column": {"center_m": [20.053961973552198, 40.055311022891004, 1.4479408233814182], "end_m": [20.053961973552198, 40.055311022891004, 1.545881646762836], "length_m": 0.19588164676283593, "orientation_wxyz": [1.0, -0.0, 0.0, 0.0], "radius_m": 0.014, "start_m": [20.053961973552198, 40.055311022891004, 1.35]}, "leg_1": {"center_m": [20.2289619735522, 40.055311022891004, 0.684], "end_m": [20.053961973552198, 40.055311022891004, 1.35], "length_m": 1.3772160324364515, "orientation_wxyz": [0.9917581675855881, -0.0, -0.12812391278475843, 0.0], "radius_m": 0.012, "start_m": [20.4039619735522, 40.055311022891004, 0.018]}, "leg_2": {"center_m": [19.9664619735522, 40.20686546855328, 0.684], "end_m": [20.053961973552198, 40.055311022891004, 1.35], "length_m": 1.3772160324364517, "orientation_wxyz": [0.9917581675855881, 0.11095856330386288, 0.06406195639237922, 0.0], "radius_m": 0.012, "start_m": [19.878961973552197, 40.35841991421556, 0.018]}, "leg_3": {"center_m": [19.9664619735522, 39.90375657722873, 0.684], "end_m": [20.053961973552198, 40.055311022891004, 1.35], "length_m": 1.3772160324364517, "orientation_wxyz": [0.9917581675855881, -0.11095856330386288, 0.06406195639237922, 0.0], "radius_m": 0.012, "start_m": [19.878961973552197, 39.75220213156645, 0.018]}, "lower_column": {"center_m": [20.053961973552198, 40.055311022891004, 0.9], "end_m": [20.053961973552198, 40.055311022891004, 1.35], "length_m": 0.9000000000000001, "orientation_wxyz": [1.0, -0.0, 0.0, 0.0], "radius_m": 0.009, "start_m": [20.053961973552198, 40.055311022891004, 0.45]}}}'
+                bool semanticVisualProxy = 1
+            }
+        }
+    )
+    {
+        token visibility = "inherited"
+
+        def Xform "OpticalFrame" (
+            customData = {
+                dictionary mro = {
+                    string owner = "mro_camera_rig_visuals_v1"
+                    bool semanticVisualProxy = 1
+                }
+            }
+        )
+        {
+            quatd xformOp:orient = (0.2594914392179462, 0.2734469213284245, 0.6718591811812042, 0.6375705567630355)
+            double3 xformOp:translate = (20, 40, 1.6)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+
+            def Cube "Housing" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.14, 0.15, 0.16)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.15, 0.1, 0.1)
+                double3 xformOp:translate = (0, 0, 0.08)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "ModelAccent" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.1, 0.36, 0.44)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.075, 0.002, 0.055)
+                double3 xformOp:translate = (0, 0.0505, 0.085)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cylinder "LensBarrel" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.03
+                color3f[] primvars:displayColor = [(0.055, 0.06, 0.065)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.027
+                double3 xformOp:translate = (0, 0, 0.015)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "LensGlass" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.001
+                color3f[] primvars:displayColor = [(0.04, 0.1, 0.14)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.02268
+                double3 xformOp:translate = (0, 0, 0.0005)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "Tripod" (
+            customData = {
+                dictionary mro = {
+                    string owner = "mro_camera_rig_visuals_v1"
+                    bool semanticVisualProxy = 1
+                }
+            }
+        )
+        {
+            def Cylinder "center_column" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.19588164676283593
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.014
+                quatd xformOp:orient = (1, -0, 0, 0)
+                double3 xformOp:translate = (20.053961973552198, 40.055311022891004, 1.4479408233814182)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364515
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855881, -0, -0.12812391278475843, 0)
+                double3 xformOp:translate = (20.2289619735522, 40.055311022891004, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364517
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855881, 0.11095856330386288, 0.06406195639237922, 0)
+                double3 xformOp:translate = (19.9664619735522, 40.20686546855328, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "leg_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 1.3772160324364517
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.012
+                quatd xformOp:orient = (0.9917581675855881, -0.11095856330386288, 0.06406195639237922, 0)
+                double3 xformOp:translate = (19.9664619735522, 39.90375657722873, 0.684)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "lower_column" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.9000000000000001
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.009
+                quatd xformOp:orient = (1, -0, 0, 0)
+                double3 xformOp:translate = (20.053961973552198, 40.055311022891004, 0.9)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400894
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611272, -0, 0.6524341811023798, 0)
+                double3 xformOp:translate = (20.1677119735522, 40.055311022891004, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400772
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611275, -0.5650245751319597, -0.3262170905511864, 0)
+                double3 xformOp:translate = (19.9970869735522, 40.15382141257149, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "brace_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.23005627572400772
+                color3f[] primvars:displayColor = [(0.32, 0.34, 0.36)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.005
+                quatd xformOp:orient = (0.7578453927611275, 0.5650245751319597, -0.3262170905511864, 0)
+                double3 xformOp:translate = (19.9970869735522, 39.95680063321052, 0.4671)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+
+            def Cylinder "Foot_1" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (20.4039619735522, 40.055311022891004, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Foot_2" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (19.878961973552197, 40.35841991421556, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Foot_3" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                uniform token axis = "Z"
+                double height = 0.025
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double radius = 0.028
+                double3 xformOp:translate = (19.878961973552197, 39.75220213156645, 0.018)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cube "Head" (
+                customData = {
+                    dictionary mro = {
+                        string owner = "mro_camera_rig_visuals_v1"
+                        bool semanticVisualProxy = 1
+                    }
+                }
+            )
+            {
+                color3f[] primvars:displayColor = [(0.1, 0.11, 0.12)]
+                float[] primvars:displayOpacity = [1]
+                double size = 1
+                double3 xformOp:scale = (0.055, 0.055, 0.03)
+                double3 xformOp:translate = (20.053961973552198, 40.055311022891004, 1.545881646762836)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+}
+

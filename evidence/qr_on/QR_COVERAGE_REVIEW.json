@@ -1,0 +1,35 @@
+{
+  "scope": "coverage of independent QR content evidence; not robot-body visibility or a 100-percent-readability requirement",
+  "robots": {
+    "drone": {
+      "simultaneous_image_samples": 451,
+      "samples_with_at_least_one_valid_board": 303,
+      "samples_without_valid_board": 148,
+      "longest_consecutive_unreadable_samples": 59,
+      "longest_unreadable_sample_route_times_s": [
+        19.466666666666665,
+        23.333333333333332
+      ],
+      "valid_board_reads": 303,
+      "wrong_reads": 0
+    },
+    "rover": {
+      "simultaneous_image_samples": 451,
+      "samples_with_at_least_one_valid_board": 85,
+      "samples_without_valid_board": 366,
+      "longest_consecutive_unreadable_samples": 320,
+      "longest_unreadable_sample_route_times_s": [
+        6.733333333333333,
+        28.0
+      ],
+      "valid_board_reads": 85,
+      "wrong_reads": 0
+    }
+  },
+  "cameras_with_no_valid_qr": [
+    "cam_03"
+  ],
+  "unreadable_is_sync_failure": false,
+  "acceptance_criteria_changed": false,
+  "new_capture_required_by_this_report": false
+}

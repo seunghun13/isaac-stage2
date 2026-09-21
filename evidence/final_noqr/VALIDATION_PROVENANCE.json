@@ -1,0 +1,13 @@
+{
+  "schema": "stage2_qr_free_validation_provenance_v1",
+  "qr_on_case": "/mnt/DATA/workspace/ws_minho/mro_1/stage2/outputs/integrated5_validation01_3113bfd31a",
+  "qr_on_database_sha256": "051d291254275d4fb2101766bcf23dbedb84083f915c452dbca7a2394bed7f2c",
+  "scope": "Prior QR-on30s camera/GT/global metadata and calibrated60Hz scene-step numerical mapping; direct QR coverage remains limited.",
+  "files": {
+    "stage2_scene_time_mapping_20260920/RESULTS.md": "867e5ddb63abd74490d2cdf55d708661aa3262c4afe5e0947da6d26baf94e455",
+    "stage2_scene_time_mapping_20260920/SUMMARY.json": "b46ac980faa04ad5bdc63b2de0e40d265e329043674cc2d539873d22eb0ce59d",
+    "stage2_scene_time_mapping_20260920/validation01_audit01.json": "e70c6157016be7e98281f500c0dbc88fec9a0c36353b2c729f16682b8eee8c23",
+    "stage2_scene_time_mapping_20260920/QR_COVERAGE_REVIEW.json": "fa6cb2274859d1532fcf290845ba1324590a77721a4cad1b193595e0525314fd",
+    "stage2_scene_time_mapping_20260920/CALIBRATION.json": "8232f082d975680f95fb944ffc130ee18b4f5c87e037890c90450fc49a2d3056"
+  }
+}

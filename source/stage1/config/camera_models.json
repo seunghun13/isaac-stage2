@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "status": "prepared_not_applied",
+  "source": {
+    "archive": "mro_isaac_handoff_review_delta_20260908.tar.gz",
+    "member": "mro_isaac_project/capture/config/camera_models.json",
+    "interpretation": "Handoff parameters are simulation references, not verified server or physical-device calibration."
+  },
+  "projection": "ideal_pinhole",
+  "pixel_coordinate_convention": "principal_point_at_width_over_2_height_over_2",
+  "render_output": "RGB8",
+  "models": {
+    "zed_x_one_4k_wide": {
+      "display_name": "Stereolabs ZED X One 4K Wide",
+      "kind": "monocular_color",
+      "native_resolution_px": [3840, 2160],
+      "preview_resolution_px": [480, 270],
+      "pixel_pitch_um": 2.0,
+      "pinhole": {
+        "sensor_width_mm": 7.68,
+        "sensor_height_mm": 4.32,
+        "focal_length_mm": 3.02,
+        "fx_px": 1510.0,
+        "fy_px": 1510.0,
+        "cx_px": 1920.0,
+        "cy_px": 1080.0,
+        "horizontal_fov_deg": 103.63284894025476,
+        "vertical_fov_deg": 71.1471098382063,
+        "distortion_coefficients": null,
+        "depth_of_field_enabled": false
+      },
+      "physical_reference": {
+        "source": "Handoff's transcription of team-provided ZED X One 4K Datasheet Rev 2.2; not independently rechecked against the physical device in this preparation.",
+        "nominal_lens_focal_length_mm": 3.1,
+        "advertised_optical_horizontal_fov_deg": 110.0,
+        "shutter_type": "rolling",
+        "reported_native_fps": 15,
+        "device_calibration_file": null
+      },
+      "simulation": {
+        "scheduled_fps": 15,
+        "rolling_shutter_model_enabled": false,
+        "distortion_model_enabled": false,
+        "frame_rate_is_schedule_not_throughput_guarantee": true,
+        "intrinsics_note": "3.02 mm is the handoff's rectified pinhole equivalent from fx=1510 and 2 um pixels; it is different from the physical 3.1 mm lens and its advertised optical 110 degree FOV."
+      },
+      "validation": {
+        "local_handoff_preview_files_verified_previously": true,
+        "local_handoff_native_evidence_frames": 2,
+        "server_runtime_verified": false,
+        "physical_device_match_verified": false
+      }
+    },
+    "flir_bfs_u3_244s8c_kowa_lm12xc": {
+      "display_name": "Teledyne FLIR BFS-U3-244S8C-C + Kowa LM12XC",
+      "kind": "monocular_color",
+      "native_resolution_px": [5320, 4600],
+      "preview_resolution_px": [665, 575],
+      "pixel_pitch_um": 2.74,
+      "pinhole": {
+        "sensor_width_mm": 14.5768,
+        "sensor_height_mm": 12.604,
+        "focal_length_mm": 12.0,
+        "fx_px": 4379.562043795621,
+        "fy_px": 4379.562043795621,
+        "cx_px": 2660.0,
+        "cy_px": 2300.0,
+        "horizontal_fov_deg": 62.546200576617096,
+        "vertical_fov_deg": 55.41391653868257,
+        "distortion_coefficients": null,
+        "depth_of_field_enabled": false
+      },
+      "physical_reference": {
+        "source": "User-provided team chat: 5320x4600, HFOV62.55, 2.74um, global shutter, 12FPS; 12mm lens from handoff.",
+        "nominal_lens_focal_length_mm": 12.0,
+        "team_reported_horizontal_fov_deg": 62.55,
+        "shutter_type": "global",
+        "reported_native_fps": 12,
+        "device_calibration_file": null
+      },
+      "simulation": {
+        "scheduled_fps": 15,
+        "rolling_shutter_model_enabled": false,
+        "distortion_model_enabled": false,
+        "frame_rate_is_schedule_not_throughput_guarantee": true,
+        "fps_note": "15 FPS is the inherited simulation sampling target. It does not establish 15 FPS support or throughput for the physical full-resolution FLIR camera."
+      },
+      "validation": {
+        "local_handoff_preview_files_verified_previously": true,
+        "local_handoff_native_evidence_frames": 0,
+        "server_runtime_verified": false,
+        "physical_device_match_verified": false
+      }
+    }
+  }
+}

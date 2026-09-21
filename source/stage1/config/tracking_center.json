@@ -1,0 +1,35 @@
+{
+  "frame_id": "drone_1/tracking_center",
+  "body_frame": "drone_1/base_link",
+  "reference_body_prim": "/World/drone_1/base_link",
+  "prim_path": "/World/drone_1/base_link/TrackingCenter",
+  "offset_base_m": [
+    0.0,
+    0.00021679140627384186,
+    -0.10150037612766027
+  ],
+  "dimensions_base_xyz_m": [
+    0.9482174515724182,
+    0.5852679796516895,
+    0.33475074358284473
+  ],
+  "centered_bounds_min_m": [
+    -0.4741087257862091,
+    -0.29263398982584476,
+    -0.16737537179142237
+  ],
+  "centered_bounds_max_m": [
+    0.4741087257862091,
+    0.29263398982584476,
+    0.16737537179142237
+  ],
+  "origin_definition": "midpoint of full visible model bounds at fixed reference pose",
+  "reference_pose_time_code": 0.0,
+  "axes": "parallel to base_link; meters",
+  "world_aabb_recomputed_each_frame": false,
+  "dimensions_are_sim_model_measurements": true,
+  "includes_wheels_bumpers_arms_legs_and_reference_pose_propellers": true,
+  "geometry_report": "/mnt/DATA/workspace/ws_minho/mro_1/runtime/run/20260913T031305Z_f16e12429d/tracking_center_inspection.json",
+  "geometry_sha256": "93c5868e7f8a12a11f0c768f950e662c4acb3ed7ba316d4053c1ba5baf6021d8",
+  "definition_sha256": "0fb536f0174f3a5e2d517f07286728bfa7cb5f379ba2adcf83fcd2de1f629868"
+}

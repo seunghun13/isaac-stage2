@@ -1,0 +1,35 @@
+{
+  "actual_failed_raw_reproduces_original_exception": true,
+  "actual_failed_raw_empty_mapping_preserved": {
+    "schema": "stage2_scene_step_mapping_v1",
+    "native_packet_time_ns": "5166666936",
+    "native_frame_start_ns": "5166666936",
+    "native_frame_end_ns": "5166666936",
+    "native_emission_min_ns": null,
+    "native_emission_max_ns": null,
+    "derived_group_reference_min_ns": null,
+    "derived_group_reference_max_ns": null,
+    "runtime_profile_sha256": "313b3a447f5692a45802783a6236ec3d27ee662ebc1ab0589c90c2974821434b",
+    "firing_groups_checked": 300,
+    "firing_pattern_max_residual_ns": 0,
+    "valid_points": 0,
+    "group_reference_inside_own_interval": 0,
+    "group_reference_outside_own_interval": 0,
+    "observed_scene_step": 2,
+    "observed_scene_stamp_ns": "33333335",
+    "temporal_resolution": "60Hz scene step; no sub-step beam emission certification",
+    "derived_formula": "native_packet_time_ns + signed timeOffsetNs - runtime fireTimeNs[channel]",
+    "channel_formula": "(original_element_index // max_returns) % channels",
+    "all_intervals_ambiguity_check": "requires independent complete-bag audit",
+    "native_emission_times_unchanged": true,
+    "fine_global_beam_emission_verified": false,
+    "content_decode_in_this_aircraft_capture": false
+  },
+  "source_packet_unchanged": true,
+  "normal_mapping_equal_and_corrupt_empty_pattern_rejected": {
+    "drone": true,
+    "rover": true
+  },
+  "parser_worker_scene_unchanged": true,
+  "runtime_regression_pending": true
+}

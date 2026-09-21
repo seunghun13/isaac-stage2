@@ -1,0 +1,90 @@
+--- v6/integration_runtime.py
++++ v7/integration_runtime.py
+@@ -72,6 +72,7 @@
+                 if parsed['available']:
+                     assert parsed['packet_sha256']==sha
+                     pc,body=pointcloud(parsed);row['pointcloud']=pc
++                    row['zero_valid_return_packet']=pc['width']==0
+                     row['scene_time_mapping']=packet_mapping(parsed,runtime_profiles[robot],row['observed_clock'])
+                 event_log.write(json.dumps(plain(row),allow_nan=False)+'\n');event_log.flush();events.append((row,body));seen[robot][key]=(row,body);event_index+=1
+                 return row,body
+@@ -120,7 +121,7 @@
+             state_log.write(json.dumps(state)+'\n');state_log.flush();emitter.offer(state);report['state_count']+=1
+             for h,body in events:
+                 h['selected_for_completed_state']=h['raw_file']==selected.get(h['sensor'])
+-                if body:emitter.offer(h,body);report['lidar_count']+=1
++                if 'pointcloud' in h:emitter.offer(h,body);report['lidar_count']+=1
+                 else:emitter.offer(dict(h,type='completion',zero_element_raw_packet=not h.get('rejected_native_packet',False)))
+             report['raw_event_count']+=len(events)
+             report['rejected_native_packet_count']=report.get('rejected_native_packet_count',0)+sum(bool(h.get('rejected_native_packet')) for h,body in events)
+--- v6/scene_time_mapping.py
++++ v7/scene_time_mapping.py
+@@ -40,8 +40,8 @@
+     inside=(reference>=start)&(reference<=end)
+     return {'schema':SCHEMA,'native_packet_time_ns':str(parsed['packet_timestamp_ns']),
+       'native_frame_start_ns':str(start),'native_frame_end_ns':str(end),
+-      'native_emission_min_ns':str(int(emission.min())),'native_emission_max_ns':str(int(emission.max())),
+-      'derived_group_reference_min_ns':str(int(reference.min())),'derived_group_reference_max_ns':str(int(reference.max())),
++      'native_emission_min_ns':str(int(emission.min())) if len(emission) else None,'native_emission_max_ns':str(int(emission.max())) if len(emission) else None,
++      'derived_group_reference_min_ns':str(int(reference.min())) if len(reference) else None,'derived_group_reference_max_ns':str(int(reference.max())) if len(reference) else None,
+       'runtime_profile_sha256':profile['profile_sha256'],'firing_groups_checked':len(residual),'firing_pattern_max_residual_ns':int(residual.max()),
+       'valid_points':len(emission),'group_reference_inside_own_interval':int(inside.sum()),'group_reference_outside_own_interval':int((~inside).sum()),
+       'observed_scene_step':int(observed_clock['step']),'observed_scene_stamp_ns':str(round(observed_clock['global_s']*1e9)),
+--- v6/audit_scene_mapping.py
++++ v7/audit_scene_mapping.py
+@@ -22,6 +22,8 @@
+         for k in ('raw_file','raw_sha256','native_header_ns','observed_clock','native','pointcloud'):
+             assert b[k]==e[k],k
+         assert b['selected_for_completed_state']==(e['raw_file'] in selected)
++        assert b['zero_valid_return_packet']==e['zero_valid_return_packet']==(e['pointcloud']['width']==0)
++        if e['zero_valid_return_packet']:assert e['raw_file'] not in selected
+         raw=np.load(case/e['raw_file'],allow_pickle=False)
+         assert hashlib.sha256(raw.tobytes()).hexdigest()==e['raw_sha256']
+         p=parse_gmo_packet(raw);profile=profiles[e['sensor']];h=b['scene_time_mapping']
+@@ -36,8 +38,8 @@
+         start=int(p['frameStart']['timestamp_ns']);end=int(p['frameEnd']['timestamp_ns'])
+         assert h['schema']=='stage2_scene_step_mapping_v1' and h['native_packet_time_ns']==str(native)
+         assert (h['native_frame_start_ns'],h['native_frame_end_ns'])==(str(start),str(end))
+-        assert (h['native_emission_min_ns'],h['native_emission_max_ns'])==(str(int(emission.min())),str(int(emission.max())))
+-        assert (h['derived_group_reference_min_ns'],h['derived_group_reference_max_ns'])==(str(int(reference.min())),str(int(reference.max())))
++        assert (h['native_emission_min_ns'],h['native_emission_max_ns'])==((str(int(emission.min())),str(int(emission.max()))) if len(emission) else (None,None))
++        assert (h['derived_group_reference_min_ns'],h['derived_group_reference_max_ns'])==((str(int(reference.min())),str(int(reference.max()))) if len(reference) else (None,None))
+         assert h['observed_scene_step']==e['observed_clock']['step']
+         assert h['observed_scene_stamp_ns']==str(round(e['observed_clock']['global_s']*1e9))
+         assert h['runtime_profile_sha256']==profile['profile_sha256']
+@@ -48,6 +50,7 @@
+         assert h['native_emission_times_unchanged'] and not h['fine_global_beam_emission_verified'] and not h['content_decode_in_this_aircraft_capture']
+         intervals[e['sensor']].append((start,end,e['observed_clock']['step']))
+         checks['packet_mapping_fields_recomputed']+=1;checks['firing_groups']+=len(group_rows)
++        checks['zero_valid_return_packets']+=int(not len(reference))
+         if e['raw_file'] in selected:points.append((e,reference))
+     statistics=collections.defaultdict(collections.Counter);rows=[]
+     arrays={sensor:np.asarray(v,np.int64) for sensor,v in intervals.items()}
+--- v6/audit_integration.py
++++ v7/audit_integration.py
+@@ -121,7 +121,7 @@
+         c['first_completion_missing_states']+=int(robot not in state['first_completion_selected'])
+         c['second_completion_missing_states']+=int(robot not in state['completion_evidence'][1]['last_nonempty'])
+         for e in own:
+-            if e['sensor']==robot and 'pointcloud' in e:c['raw_nonempty_by_cycle'][e['completion_cycle']]+=1
++            if e['sensor']==robot and 'pointcloud' in e and e['pointcloud']['width']>0:c['raw_nonempty_by_cycle'][e['completion_cycle']]+=1
+ raw_checked=0;rejected_checked=[];empty_diagnostic_headers=0
+ for event in events:
+     original=np.load(case/event['raw_file'],allow_pickle=False)
+@@ -145,7 +145,7 @@
+ for state in states:
+     for cycle in state['completion_evidence']:
+         own=[e for e in events if e['index']==state['index'] and e['completion_cycle']==cycle['cycle']]
+-        assert cycle['last_nonempty']=={e['sensor']:e['raw_file'] for e in own if 'pointcloud' in e}
++        assert cycle['last_nonempty']=={e['sensor']:e['raw_file'] for e in own if 'pointcloud' in e and e['pointcloud']['width']>0}
+         assert cycle['rejected_native_packets']==sum(bool(e.get('rejected_native_packet')) for e in own)
+ selected={r['raw_file'] for r in events if 'pointcloud' in r};assert all(set(r['selected_raw_files'])=={'drone','rover'} and set(r['selected_raw_files'].values())<=selected for r in states)
+ assert session['source_hashes'] and session['spec']==spec and session['scene']['boards']=={}
+@@ -168,5 +168,7 @@
+ result['all_native_raw_snapshot_hash_checks']=raw_checked;result['zero_element_diagnostic_headers_checked']=empty_diagnostic_headers;result['rejected_native_packets']={'count':len(rejected_checked),'files':rejected_checked,'retained_raw':True,'included_as_pointcloud':False};result['completion_cycle_checks']=cycle_summary;result['two_fixed_completion_cycles_verified']=True
+ from audit_scene_mapping import audit_mapping
+ result['scene_mapping']=audit_mapping(case,states,events,mapping_rows,session,out)
++result['zero_valid_return_packets']=sum(bool(e.get('zero_valid_return_packet')) for e in events)
++result['zero_valid_return_semantics']='retained raw and width0 PointCloud2, nullable valid-point time extrema, excluded only from nonempty selection; native frame interval remains in all-interval search'
+ result['agreed_scene_step_sync_pass']=bool(result['scene_mapping']['selected_scene_step_mapping_pass'] and max_camera_error==0 and max_lidar_ref_error==0)
+ save('AUDIT.json',result);print(json.dumps({k:v for k,v in result.items() if k!='qr'}))

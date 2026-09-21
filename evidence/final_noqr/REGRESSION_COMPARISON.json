@@ -1,0 +1,75 @@
+{
+  "status": "pass",
+  "scope": "QR removal preserves actual clock cadence, unchanged camera/route/sensor configuration and accepted60Hz mapping in1s and5s turn-inclusive regression",
+  "checks": {
+    "smoke02": {
+      "clock_relative_sequence_exact": true,
+      "actual_USD_path_equal": true,
+      "cameras_and_K_equal": true,
+      "lidar_runtime_profile_equal": true,
+      "nonQR_staticTF_equal": true,
+      "same_two_completion_selection": true,
+      "image_schedule_equal": true,
+      "qr_absence_pass": true,
+      "states": 61,
+      "images": 48,
+      "scene_mapping_selected": {
+        "rover": {
+          "packets": 61,
+          "points": 284296,
+          "unique_current_step": 284296,
+          "only_other_step": 0,
+          "ambiguous_multiple_steps": 0,
+          "no_candidate": 0
+        },
+        "drone": {
+          "packets": 61,
+          "points": 159830,
+          "unique_current_step": 159830,
+          "only_other_step": 0,
+          "ambiguous_multiple_steps": 0,
+          "no_candidate": 0
+        }
+      },
+      "capture_wall_s": 141.58036333229393,
+      "all_raw_native_preserved": true,
+      "RGB_or_pointcloud_equality_required": false
+    },
+    "pilot02": {
+      "clock_relative_sequence_exact": true,
+      "actual_USD_path_equal": true,
+      "cameras_and_K_equal": true,
+      "lidar_runtime_profile_equal": true,
+      "nonQR_staticTF_equal": true,
+      "same_two_completion_selection": true,
+      "image_schedule_equal": true,
+      "qr_absence_pass": true,
+      "states": 301,
+      "images": 228,
+      "scene_mapping_selected": {
+        "rover": {
+          "packets": 301,
+          "points": 1400754,
+          "unique_current_step": 1400754,
+          "only_other_step": 0,
+          "ambiguous_multiple_steps": 0,
+          "no_candidate": 0
+        },
+        "drone": {
+          "packets": 301,
+          "points": 785909,
+          "unique_current_step": 785909,
+          "only_other_step": 0,
+          "ambiguous_multiple_steps": 0,
+          "no_candidate": 0
+        }
+      },
+      "capture_wall_s": 577.4908773447387,
+      "all_raw_native_preserved": true,
+      "RGB_or_pointcloud_equality_required": false
+    }
+  },
+  "full30s_final_capture_verified": false,
+  "fine_global_beam_emission_verified": false,
+  "camera_image_content_time_verified": null
+}
